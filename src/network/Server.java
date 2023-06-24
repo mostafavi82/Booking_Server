@@ -10,9 +10,12 @@ public class Server {
             ServerSocket serverSocket = serverSocket = new ServerSocket(8080);
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("a user connected !");
+                new RequestHandler(socket).start();
             }
         }catch (IOException err) {
             err.printStackTrace();
+            System.out.println("Error in accept server socket");
         }
     }
 }
