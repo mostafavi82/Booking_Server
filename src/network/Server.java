@@ -7,8 +7,10 @@ import java.net.Socket;
 public class Server {
     public void start() throws IOException {
         try {
-            ServerSocket serverSocket = serverSocket = new ServerSocket(8080);
+            ServerSocket serverSocket = serverSocket = new ServerSocket(8000);
+
             while (true) {
+                System.out.println("Wait for connect ...");
                 Socket socket = serverSocket.accept();
                 System.out.println("a user connected !");
                 new RequestHandler(socket).start();
