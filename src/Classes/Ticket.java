@@ -12,7 +12,7 @@ public class Ticket {
     int id;
 
 
-    Ticket(String companyName,String origin,String destination,String departureTime,String arrivalTime,String travelTime, int cost , String travelClass,int id){
+    public Ticket(String companyName, String origin, String destination, String departureTime, String arrivalTime, String travelTime, int cost, String travelClass, int id){
         this.companyName = companyName;
         this.origin = origin;
         this.destination = destination;

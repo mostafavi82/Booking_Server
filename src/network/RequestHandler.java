@@ -1,26 +1,32 @@
 package src.network;
 
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import src.Classes.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
+import com.fasterxml.jackson.databind.*;
+
 import org.json.JSONException;
+
 import org.json.JSONObject;
 import java.net.Socket;
 import java.util.Scanner;
+
+import src.Classes.User;
 import src.controller.Controller;
 
 public class RequestHandler extends Thread{
-    private Socket socket;
+    private final Socket socket;
 
     public RequestHandler(Socket socket){
         this.socket = socket;
     }
 
     @Override
-    public void run(){
+    public void run() {
         super.run();
         System.out.println("in RequestHandler");
 
@@ -33,25 +39,34 @@ public class RequestHandler extends Thread{
             }
             String jsonString = stringBuilder.toString();
 
-            JSONObject jsonObject = new JSONObject(jsonString);
 
-            String requestType = jsonObject.getString("requestType");
-            String requestDataString = jsonObject.getString("requestData");
-            System.out.println("Extract json");
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode jsonNode = objectMapper.readTree(jsonString);
 
-            JSONObject requestData = new JSONObject(requestDataString);
+            String requestType = jsonNode.get("requestType").asText();
+            String requestData = jsonNode.get("requestData").asText();
+            System.out.println(requestData);
+
 
             Controller controll = new Controller();
-            controll.controller(requestType, requestData);
+            controll.controller(requestType, requestData,objectMapper);
 
             socket.close();
+
         }catch (IOException err) {
-        err.printStackTrace();
-        }catch (JSONException e) {
-        e.printStackTrace();
-        System.out.println("Error in creating json from requestDataString");
+            err.printStackTrace();
         }
 
+    }
+    public User convertJsonToUser(String jsonString) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            User user = objectMapper.readValue(jsonString, User.class);
+            return user;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
 
