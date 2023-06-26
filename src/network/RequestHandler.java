@@ -2,11 +2,10 @@ package src.network;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import src.Classes.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+
+import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 import com.fasterxml.jackson.databind.*;
 
@@ -26,7 +25,7 @@ public class RequestHandler extends Thread{
 
         try{
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+            DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
             StringBuilder stringBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -44,15 +43,13 @@ public class RequestHandler extends Thread{
 
 
             Controller controll = new Controller();
-            ObjectNode result = controll.controller(requestType, requestData,objectMapper);
+            ObjectNode result = controll.controller(requestType, requestData,objectMapper,dos);
 
             System.out.println(result.toString());
-            //send data to client
-//            out.print(result.toString());
+
 
             reader.close();
-//            out.close();
-
+            dos.close();
             socket.close();
 
         }catch (IOException err) {

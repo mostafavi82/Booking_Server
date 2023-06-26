@@ -10,7 +10,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,19 +28,19 @@ public class Controller {
 //    public Controller(String requestType, JSONObject requestData) {
 //    }
 
-    public static ObjectNode controller(String requestType, String requestData , ObjectMapper objectMapper){
+    public static ObjectNode controller(String requestType, String requestData , ObjectMapper objectMapper , DataOutputStream dos){
 
         switch (requestType){
             case "createUser":
                 System.out.println("in create user");
-                return addUserToFile(requestData,objectMapper);
+                return addUserToFile(requestData,objectMapper ,dos);
             default:
                 System.out.println("default in switch case");
                 return null;
         }
     }
 
-    public static ObjectNode addUserToFile(String requestData , ObjectMapper objectMapper) {
+    public static ObjectNode addUserToFile(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
         final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
@@ -118,6 +120,13 @@ public class Controller {
             result.put("result" , false);
         }
 
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         return result;
     }
