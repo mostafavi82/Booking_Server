@@ -5,17 +5,11 @@ import src.Classes.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 import com.fasterxml.jackson.databind.*;
 
-import org.json.JSONException;
-
-import org.json.JSONObject;
-import java.net.Socket;
-import java.util.Scanner;
-
-import src.Classes.User;
 import src.controller.Controller;
 
 public class RequestHandler extends Thread{
@@ -32,6 +26,7 @@ public class RequestHandler extends Thread{
 
         try{
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+//            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             StringBuilder stringBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -39,7 +34,7 @@ public class RequestHandler extends Thread{
             }
             String jsonString = stringBuilder.toString();
 
-
+            System.out.println(jsonString);
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(jsonString);
 
@@ -49,7 +44,14 @@ public class RequestHandler extends Thread{
 
 
             Controller controll = new Controller();
-            controll.controller(requestType, requestData,objectMapper);
+            ObjectNode result = controll.controller(requestType, requestData,objectMapper);
+
+            System.out.println(result.toString());
+            //send data to client
+//            out.print(result.toString());
+
+            reader.close();
+//            out.close();
 
             socket.close();
 
@@ -58,16 +60,7 @@ public class RequestHandler extends Thread{
         }
 
     }
-    public User convertJsonToUser(String jsonString) {
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            User user = objectMapper.readValue(jsonString, User.class);
-            return user;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 }
 
 

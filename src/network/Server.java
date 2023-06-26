@@ -7,7 +7,9 @@ import java.net.Socket;
 public class Server {
     public void start() throws IOException {
         try {
-            ServerSocket serverSocket = serverSocket = new ServerSocket(8000);
+            int port = 8000;
+            ServerSocket serverSocket = serverSocket = new ServerSocket(port);
+            System.out.println("server is running on port " +  port);
 
             while (true) {
                 System.out.println("Wait for connect ...");

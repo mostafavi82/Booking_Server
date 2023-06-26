@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 
 import java.io.IOException;
@@ -23,20 +26,23 @@ public class Controller {
 //    public Controller(String requestType, JSONObject requestData) {
 //    }
 
-    public static JSONObject controller(String requestType, String requestData , ObjectMapper objectMapper){
+    public static ObjectNode controller(String requestType, String requestData , ObjectMapper objectMapper){
+
         switch (requestType){
             case "createUser":
                 System.out.println("in create user");
-                addUserToFile(requestData,objectMapper);
-                break;
+                return addUserToFile(requestData,objectMapper);
             default:
                 System.out.println("default in switch case");
+                return null;
         }
-        return null;
     }
 
     public static ObjectNode addUserToFile(String requestData , ObjectMapper objectMapper) {
         final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
 
         try {
             // Parsing the inner JSON string again
@@ -91,82 +97,43 @@ public class Controller {
             User newUser = new User(username,password,email,avatarPath,phone,id,birthday,walletBalance,transactionList,ticketList);
             System.out.println("user object created");
 
-            // خواندن فایل JSON و تبدیل به ArrayNode
             ObjectMapper mapper = new ObjectMapper();
             File jsonFile = new File(USERS_FILE_PATH);
             ArrayNode arrayNode = (ArrayNode) mapper.readTree(jsonFile);
-
-            // ایجاد ObjectNode جدید و اضافه کردن به ArrayNode
             ObjectNode newObjectNode = newUser.toObjectNode();
 
+            if(!hasUser(newObjectNode,arrayNode)){
+                arrayNode.add(newObjectNode);
+                ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+                writer.writeValue(jsonFile, arrayNode);
+                System.out.println("ObjectNode added successfully.");
+                result.put("result" , true);
+            }else{
+                System.out.println("user is exist in users.json");
+                result.put("result" , false);
+            }
 
-            arrayNode.add(newObjectNode);
-
-            // ذخیره تغییرات در فایل JSON
-            mapper.writeValue(jsonFile, arrayNode);
-
-            System.out.println("ObjectNode added successfully.");
         } catch (IOException e) {
             e.printStackTrace();
+            result.put("result" , false);
         }
 
-            // Do something with the ticket data
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        ObjectNode jsonResult = objectMapper.createObjectNode();
-//
-//        try {
-//            // Read existing users from the file
-//            String fileContent = new String(Files.readAllBytes(Paths.get(USERS_FILE_PATH)));
-//            JsonNode usersNode = objectMapper.readTree(fileContent);
-//            System.out.println("get file content");
-//
-//            if (hasUser(userJson , usersNode)) {
-//                jsonResult.put("result", false);
-//                System.out.println("result is false");
-//            } else {
-//                System.out.println("in else");
-//                // Add the user to the array
-//                ((ObjectNode) usersNode).putPOJO("user", userJson);
-//                System.out.println("create ObjectNode");
-//                // Write the updated JSON back to the file
-//                objectMapper.writeValue(new File(USERS_FILE_PATH), usersNode);
-//
-//                jsonResult.put("result", true);
-//                System.out.println("User added successfully to users.json");
-//            }
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            System.out.println("Error adding user to users.json");
-//            jsonResult.put("result", false);
-//        } catch (Exception e) {
-//            jsonResult.put("result", false);
-//        } finally {
-//            return jsonResult;
-//        }
-        return null;
+
+        return result;
     }
 
 
 
 
 
-    public static boolean hasUser(String userJson, JsonNode usersArray) {
+    public static boolean hasUser(ObjectNode newUser,ArrayNode usersList) {
         System.out.println("in hasUser");
-//        ObjectNode newUserJson = (ObjectNode) userJson;
-//
-//        for (JsonNode existingUser : usersArray) {
-//            if (existingUser.equals(newUserJson)) {
-//                System.out.println("\n \n------------------equals------------------ \n \n");
-//                return true;
-//            }
-//        }
-//
-//        if (usersArray.size() > 0) {
-//            System.out.println("\n 1. user1 : " + usersArray.get(0));
-//            System.out.println("\n 2. newUser : " + userJson);
-//        }
-//        System.out.println("end of hasUser");
+
+        for(int i = 0; i < usersList.size() ; i++){
+            if(usersList.get(i).get("username").equals(newUser.get("username"))){
+                return true;
+            }
+        }
         return false;
     }
 
