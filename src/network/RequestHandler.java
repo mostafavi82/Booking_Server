@@ -43,9 +43,7 @@ public class RequestHandler extends Thread{
 
 
             Controller controll = new Controller();
-            ObjectNode result = controll.controller(requestType, requestData,objectMapper,dos);
-
-            System.out.println(result.toString());
+            controll.controller(requestType, requestData,objectMapper,dos);
 
 
             reader.close();

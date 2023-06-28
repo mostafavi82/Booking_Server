@@ -28,15 +28,20 @@ public class Controller {
 //    public Controller(String requestType, JSONObject requestData) {
 //    }
 
-    public static ObjectNode controller(String requestType, String requestData , ObjectMapper objectMapper , DataOutputStream dos){
+    public static void controller(String requestType, String requestData , ObjectMapper objectMapper , DataOutputStream dos){
 
         switch (requestType){
             case "createUser":
                 System.out.println("in create user");
-                return addUserToFile(requestData,objectMapper ,dos);
+                addUserToFile(requestData,objectMapper ,dos);
+                break;
+            case "checkPasswordAndUsername":
+                System.out.println("in checkPasswordAndUsername");
+                checkPasswordAndUsername(requestData,objectMapper ,dos);
+                break;
             default:
                 System.out.println("default in switch case");
-                return null;
+
         }
     }
 
@@ -142,6 +147,50 @@ public class Controller {
             if(usersList.get(i).get("username").equals(newUser.get("username"))){
                 return true;
             }
+        }
+        return false;
+    }
+
+
+    public static boolean checkPasswordAndUsername(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
+        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
+        result.put("username" , "null");
+
+        try {
+            // Parsing the inner JSON string again
+            JsonNode innerJsonNode = objectMapper.readTree(requestData);
+
+            String username = innerJsonNode.get("username").asText();
+            String password = innerJsonNode.get("password").asText();
+
+
+            ObjectMapper mapper = new ObjectMapper();
+            File jsonFile = new File(USERS_FILE_PATH);
+            ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
+            for(int i = 0; i < usersList.size() ; i++){
+                if(usersList.get(i).get("username").asText().equals(username)){
+
+                    if(usersList.get(i).get("password").asText().equals(password)){
+                        result = (ObjectNode)usersList.get(i);
+
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            System.out.println("returnt data is : " + result.toString());
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         return false;
     }
