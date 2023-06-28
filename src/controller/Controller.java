@@ -1,5 +1,6 @@
 package src.controller;
-
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.*;
@@ -9,7 +10,7 @@ import org.json.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import java.util.Random;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -42,9 +43,9 @@ public class Controller {
                 checkPasswordAndUsername(requestData,objectMapper ,dos);
                 break;
 
-            case "changeWalletBalance" :
-                System.out.println("in changeWalletBalance");
-                changeWalletBalance(requestData,objectMapper ,dos);
+            case "changeWalletBalanceAndCreateTransaction" :
+                System.out.println("in changeWalletBalanceAndCreateTransaction");
+                changeWalletBalanceAndCreateTransaction(requestData,objectMapper ,dos);
                 break;
 
             case "changeAccountInformation" :
@@ -56,6 +57,7 @@ public class Controller {
                 System.out.println("in changePersonalInformation");
                 changePersonalInformation(requestData,objectMapper ,dos);
                 break;
+
 
             default:
                 System.out.println("default in switch case");
@@ -217,7 +219,7 @@ public class Controller {
 
 
 
-    public static boolean changeWalletBalance(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
+    public static boolean changeWalletBalanceAndCreateTransaction(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
         final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
@@ -230,6 +232,7 @@ public class Controller {
 
             String username = innerJsonNode.get("username").asText();
             int amount = innerJsonNode.get("amount").asInt();
+            String id = innerJsonNode.get("id").asText();
 
 
 
@@ -238,10 +241,20 @@ public class Controller {
             ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
             for(int i = 0; i < usersList.size() ; i++){
                 if(usersList.get(i).get("username").asText().equals(username)){
+
                     int walletBalance = usersList.get(i).get("walletBalance").asInt();
                     System.out.println(amount + walletBalance);
                     String newWalletBalance = String.valueOf(walletBalance + amount);
+
                     ((ObjectNode)usersList.get(i)).put("walletBalance" , newWalletBalance);
+
+                    ObjectNode transactionNode = mapper.createObjectNode();
+                    transactionNode.put("date", formatDate());
+                    transactionNode.put("type", (amount > 0) ? "Income" : "Buy");
+                    transactionNode.put("amount",(amount > 0) ? amount : -1 * amount);
+                    transactionNode.put("id", id);
+                    ((ObjectNode)usersList.get(i).get("transactionsList")).set(id, transactionNode);
+
                     ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
                     writer.writeValue(jsonFile, usersList);
                     result.put("result" , true);
@@ -311,6 +324,13 @@ public class Controller {
         return false;
     }
 
+    public static String formatDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy.MM.dd");
+        String formattedDate = currentDate.format(formatter);
+        return formattedDate;
+    }
+
 
     public static boolean changePersonalInformation(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
         final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
@@ -358,6 +378,10 @@ public class Controller {
         }
         return false;
     }
+
+
+
+
 
 
 }
