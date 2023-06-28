@@ -36,18 +36,27 @@ public class Controller {
                 System.out.println("in create user");
                 addUserToFile(requestData,objectMapper ,dos);
                 break;
+
             case "checkPasswordAndUsername":
                 System.out.println("in checkPasswordAndUsername");
                 checkPasswordAndUsername(requestData,objectMapper ,dos);
                 break;
+
             case "changeWalletBalance" :
                 System.out.println("in changeWalletBalance");
                 changeWalletBalance(requestData,objectMapper ,dos);
                 break;
+
             case "changeAccountInformation" :
                 System.out.println("in changeAccountInformation");
                 changeAccountInformation(requestData,objectMapper ,dos);
                 break;
+
+            case "changePersonalInformation" :
+                System.out.println("in changePersonalInformation");
+                changePersonalInformation(requestData,objectMapper ,dos);
+                break;
+
             default:
                 System.out.println("default in switch case");
 
@@ -303,6 +312,52 @@ public class Controller {
     }
 
 
+    public static boolean changePersonalInformation(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
+        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
+        result.put("result" , false);
+
+        try {
+            // Parsing the inner JSON string again
+            JsonNode innerJsonNode = objectMapper.readTree(requestData);
+
+            String username = innerJsonNode.get("username").asText();
+            String newPhone = innerJsonNode.get("newPhone").asText();
+            String newId = innerJsonNode.get("newId").asText();
+            String newBirthday = innerJsonNode.get("newBirthday").asText();
+
+
+
+            ObjectMapper mapper = new ObjectMapper();
+            File jsonFile = new File(USERS_FILE_PATH);
+            ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
+            for(int i = 0; i < usersList.size() ; i++){
+                if(usersList.get(i).get("username").asText().equals(username)){
+                    ((ObjectNode)usersList.get(i)).put("phone" , newPhone);
+                    ((ObjectNode)usersList.get(i)).put("id" , newId);
+                    ((ObjectNode)usersList.get(i)).put("birthday" , newBirthday);
+                    ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+                    writer.writeValue(jsonFile, usersList);
+                    result.put("result" , true);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            System.out.println("returnt data is : " + result.toString());
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 }
