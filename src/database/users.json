@@ -6,7 +6,7 @@
   "phone" : "09105860050",
   "id" : "0200052934",
   "birthday" : "02.3.16",
-  "walletBalance" : "140",
+  "walletBalance" : "95",
   "transactionsList" : {
     "784676" : {
       "date" : "22.14.07",
@@ -73,6 +73,24 @@
       "type" : "Income",
       "amount" : 340,
       "id" : "05747"
+    },
+    "957692654" : {
+      "date" : "23.06.29",
+      "type" : "Buy",
+      "amount" : 15,
+      "id" : "957692654"
+    },
+    "513924847" : {
+      "date" : "23.06.29",
+      "type" : "Buy",
+      "amount" : 15,
+      "id" : "513924847"
+    },
+    "864049783" : {
+      "date" : "23.06.29",
+      "type" : "Buy",
+      "amount" : 15,
+      "id" : "864049783"
     }
   },
   "ticketsList" : {
@@ -86,50 +104,6 @@
       "cost" : 15,
       "travelClass" : "Economy Class",
       "id" : 1
-    },
-    "2" : {
-      "companyName" : "Iberia",
-      "origin" : "Seoul",
-      "destination" : "New York",
-      "departureTime" : "2023-11-11 19:00:00.000",
-      "arrivalTime" : "2023-11-11 23:15:00.000",
-      "travelTime" : "4h 15min",
-      "cost" : 40,
-      "travelClass" : "First Class",
-      "id" : 2
-    },
-    "3" : {
-      "companyName" : "Delta",
-      "origin" : "Barcelona",
-      "destination" : "London",
-      "departureTime" : "2023-11-10 05:20:00.000",
-      "arrivalTime" : "2023-11-10 11:30:00.000",
-      "travelTime" : "5h 10min",
-      "cost" : 60,
-      "travelClass" : "Business Class",
-      "id" : 3
-    },
-    "4" : {
-      "companyName" : "Raja",
-      "origin" : "Barcelona",
-      "destination" : "Paris",
-      "departureTime" : "2023-11-13 11:40:00.000",
-      "arrivalTime" : "2023-11-13 13:55:00.000",
-      "travelTime" : "2h 15min",
-      "cost" : 90,
-      "travelClass" : "Economy Class",
-      "id" : 4
-    },
-    "5" : {
-      "companyName" : "Ghadir",
-      "origin" : "Sydney",
-      "destination" : "Tokyo",
-      "departureTime" : "2023-11-13 11:40:00.000",
-      "arrivalTime" : "2023-11-13 13:55:00.000",
-      "travelTime" : "2h 15min",
-      "cost" : 3,
-      "travelClass" : "Economy Class",
-      "id" : 5
     }
   }
 }, {
@@ -676,7 +650,7 @@
   "phone" : "09108392095",
   "id" : "11056",
   "birthday" : "02.3.16",
-  "walletBalance" : "433",
+  "walletBalance" : "552",
   "transactionsList" : {
     "05747" : {
       "date" : "22.14.07",
@@ -695,6 +669,24 @@
       "type" : "Buy",
       "amount" : 40,
       "id" : "887722876"
+    },
+    "953279732" : {
+      "date" : "23.06.28",
+      "type" : "Buy",
+      "amount" : -90,
+      "id" : "953279732"
+    },
+    "145971556" : {
+      "date" : "23.06.28",
+      "type" : "Income",
+      "amount" : 10,
+      "id" : "145971556"
+    },
+    "295975820" : {
+      "date" : "23.06.28",
+      "type" : "Income",
+      "amount" : 199,
+      "id" : "295975820"
     }
   },
   "ticketsList" : {

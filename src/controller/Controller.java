@@ -58,6 +58,16 @@ public class Controller {
                 changePersonalInformation(requestData,objectMapper ,dos);
                 break;
 
+            case "addFutureTravelToTicketsList" :
+                System.out.println("in addFutureTravelToTicketsList");
+                addFutureTravelToTicketsList(requestData,objectMapper ,dos);
+                break;
+
+            case "getTicketList" :
+                System.out.println("in getTicketList");
+                getTicketList(requestData,objectMapper ,dos);
+                break;
+
 
             default:
                 System.out.println("default in switch case");
@@ -382,6 +392,126 @@ public class Controller {
 
 
 
+
+    public static boolean addFutureTravelToTicketsList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
+        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
+        result.put("result" , false);
+
+        try {
+            // Parsing the inner JSON string again
+            JsonNode innerJsonNode = objectMapper.readTree(requestData);
+
+            String username = innerJsonNode.get("username").asText();
+            String companyName = innerJsonNode.get("companyName").asText();
+            String origin = innerJsonNode.get("origin").asText();
+            String destination = innerJsonNode.get("destination").asText();
+            String departureTime = innerJsonNode.get("departureTime").asText();
+            String arrivalTime = innerJsonNode.get("arrivalTime").asText();
+            String travelTime = innerJsonNode.get("travelTime").asText();
+            int cost = innerJsonNode.get("cost").asInt();
+            String travelClass = innerJsonNode.get("travelClass").asText();
+            int id = innerJsonNode.get("id").asInt();
+
+
+
+            ObjectMapper mapper = new ObjectMapper();
+            File jsonFile = new File(USERS_FILE_PATH);
+            ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
+            for(int i = 0; i < usersList.size() ; i++){
+                if(usersList.get(i).get("username").asText().equals(username)){
+
+
+                    ObjectNode ticketNode = mapper.createObjectNode();
+                    ticketNode.put("companyName", companyName);
+                    ticketNode.put("origin", origin);
+                    ticketNode.put("destination", destination);
+                    ticketNode.put("departureTime", departureTime);
+                    ticketNode.put("arrivalTime", arrivalTime);
+                    ticketNode.put("travelTime", travelTime);
+                    ticketNode.put("cost", cost);
+                    ticketNode.put("travelClass", travelClass);
+                    ticketNode.put("id", id);
+                    ((ObjectNode)usersList.get(i).get("ticketsList")).set(String.valueOf(id), ticketNode);
+
+                    ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+                    writer.writeValue(jsonFile, usersList);
+                    result.put("result" , true);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            System.out.println("returnt data is : " + result.toString());
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
+
+    public static boolean getTicketList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
+        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
+        result.put("username" , "null");
+
+        try {
+            JsonNode innerJsonNode = objectMapper.readTree(requestData);
+            String sort = innerJsonNode.get("sort").asText();
+            String filter = innerJsonNode.get("filter").asText();
+            JsonNode travel = innerJsonNode.get("travel");
+            for (JsonNode info : travel) {
+                String travelInfo = info.asText();
+                // Parsing the transaction JSON string again
+                JsonNode travelJsonNode = objectMapper.readTree(travelInfo);
+                String origin = travelJsonNode.get("origin").asText();
+                String destination = travelJsonNode.get("destination").asText();
+                String date = travelJsonNode.get("date").asText();
+                String vehicle = travelJsonNode.get("vehicle").asText();
+                String passengersNumber = travelJsonNode.get("passengersNumber").asText();
+            }
+
+
+
+//            ObjectMapper mapper = new ObjectMapper();
+//            File jsonFile = new File(USERS_FILE_PATH);
+//            ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
+//            for(int i = 0; i < usersList.size() ; i++){
+//                if(usersList.get(i).get("username").asText().equals(username)){
+//
+//                    if(usersList.get(i).get("password").asText().equals(password)){
+//                        result = (ObjectNode)usersList.get(i);
+//
+//                    }
+//                }
+//            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            System.out.println("returnt data is : " + result.toString());
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 
 }
