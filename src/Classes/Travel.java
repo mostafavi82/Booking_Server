@@ -4,6 +4,7 @@ public class Travel {
     String companyName;
     String origin;
     String destination;
+    String vehicle;
     int remainingPassengers;
     int capacity;
     String departureTime;
@@ -14,10 +15,11 @@ public class Travel {
     int id;
 
 
-    Travel(String companyName,String origin,String destination,int remainingPassengers ,int capacity ,String departureTime,String arrivalTime,String travelTime, int cost , String travelClass,int id){
+    Travel(String companyName,String origin,String destination,String vehicle,int remainingPassengers ,int capacity ,String departureTime,String arrivalTime,String travelTime, int cost , String travelClass,int id){
         this.companyName = companyName;
         this.origin = origin;
         this.destination = destination;
+        this.vehicle = vehicle;
         this.remainingPassengers = remainingPassengers;
         this.capacity = capacity;
         this.departureTime = departureTime;
