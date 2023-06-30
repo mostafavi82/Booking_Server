@@ -1,29 +1,22 @@
 package src.controller;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import com.fasterxml.jackson.databind.node.TextNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.*;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.Random;
 
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import src.Classes.*;
-
-import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+
+import src.Classes.Ticket;
+import src.Classes.Transaction;
+import src.Classes.User;
 
 
 public class Controller {
@@ -205,7 +198,6 @@ public class Controller {
 
                     if(usersList.get(i).get("password").asText().equals(password)){
                         result = (ObjectNode)usersList.get(i);
-
                     }
                 }
             }
