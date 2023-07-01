@@ -1,5 +1,6 @@
 package src.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import src.Classes.Company;
 import src.Classes.Ticket;
 import src.Classes.Transaction;
 import src.Classes.User;
@@ -23,7 +25,7 @@ public class Controller {
 //    public Controller(String requestType, JSONObject requestData) {
 //    }
 
-    public static void controller(String requestType, String requestData , ObjectMapper objectMapper , DataOutputStream dos){
+    public static void controller(String requestType, String requestData , ObjectMapper objectMapper , DataOutputStream dos) throws JsonProcessingException {
 
         switch (requestType){
             case "createUser":
@@ -60,6 +62,10 @@ public class Controller {
                 System.out.println("in getTicketList");
                 getTicketList(requestData,objectMapper ,dos);
                 break;
+
+            case "SignUp":
+                System.out.println("in SignUp");
+                SignUp(requestData, objectMapper, dos);
 
 
             default:
@@ -505,6 +511,57 @@ public class Controller {
         return false;
     }
 
+    public static ObjectNode SignUp(String requestData , ObjectMapper objectMapper , DataOutputStream dos) throws JsonProcessingException {
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\company.json";
+
+        ObjectMapper resultMapper = new ObjectMapper();
+        ObjectNode result = resultMapper.createObjectNode();
+
+        try {
+            JsonNode innerJsonNode = objectMapper.readTree(requestData);
+
+            String id = innerJsonNode.get("id").asText();
+            String password = innerJsonNode.get("password").asText();
+            String vehicle = innerJsonNode.get("vehicle").asText();
+            String name = innerJsonNode.get("name").asText();
+            String logoPath = innerJsonNode.get("logoPath").asText();
+
+            Company newCompany = new Company(id,password,vehicle,name,logoPath);
+            System.out.println("user object created");
+
+            ObjectMapper mapper = new ObjectMapper();
+            File jsonFile = new File(USERS_FILE_PATH);
+            ArrayNode arrayNode = (ArrayNode) mapper.readTree(jsonFile);
+            ObjectNode newObjectNode = newCompany.toObjectNode();
+
+            if(!hasUser(newObjectNode,arrayNode)){
+                arrayNode.add(newObjectNode);
+                ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
+                writer.writeValue(jsonFile, arrayNode);
+                System.out.println("ObjectNode added successfully.");
+                result.put("result" , true);
+            }else{
+                System.out.println("user is exist in users.json");
+                result.put("result" , false);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            result.put("result" , false);
+        }
+
+        //send data to client
+        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        try {
+            dos.write(outputByte);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 
 }
+
 
