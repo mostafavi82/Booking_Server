@@ -1,11 +1,13 @@
 package src.controller;
-
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -453,57 +455,75 @@ public class Controller {
 
 
     public static boolean getTicketList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String TravelS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\travels.json";
 
-        ObjectMapper resultMapper = new ObjectMapper();
-        ObjectNode result = resultMapper.createObjectNode();
-        result.put("username" , "null");
+        List<String> resultList = new ArrayList<>();
+
+
 
         try {
             JsonNode innerJsonNode = objectMapper.readTree(requestData);
             String sort = innerJsonNode.get("sort").asText();
             String filter = innerJsonNode.get("filter").asText();
-            JsonNode travel = innerJsonNode.get("travel");
-            for (JsonNode info : travel) {
-                String travelInfo = info.asText();
-                // Parsing the transaction JSON string again
-                JsonNode travelJsonNode = objectMapper.readTree(travelInfo);
-                String origin = travelJsonNode.get("origin").asText();
-                String destination = travelJsonNode.get("destination").asText();
-                String date = travelJsonNode.get("date").asText();
-                String vehicle = travelJsonNode.get("vehicle").asText();
-                String passengersNumber = travelJsonNode.get("passengersNumber").asText();
+            String travel = innerJsonNode.get("travel").asText();
+
+            String origin = "";
+            String destination = "";
+            String date = "" ;
+            String vehicle = "";
+            int passengersNumber = 0;
+
+            System.out.println("travel : " + travel);
+            // Parsing the transaction JSON string again
+            JsonNode travelJsonNode = objectMapper.readTree(travel);
+            origin = travelJsonNode.get("origin").asText();
+            destination = travelJsonNode.get("destination").asText();
+            date = travelJsonNode.get("date").asText();
+            vehicle = travelJsonNode.get("vehicle").asText();
+            passengersNumber = travelJsonNode.get("passengersNumber").asInt();
+            System.out.println("origin : " + origin + " - destination : " + destination + " - date : " + date);
+
+
+            ObjectMapper mapper = new ObjectMapper();
+            File jsonFile = new File(TravelS_FILE_PATH);
+            ArrayNode travelsList = (ArrayNode) mapper.readTree(jsonFile);
+            for(int i = 0; i < travelsList.size() ; i++){
+                if(travelsList.get(i).get("origin").asText().equals(origin)){
+                    if(travelsList.get(i).get("destination").asText().equals(destination)){
+                        if (compareDates(travelsList.get(i).get("departureTime").asText(),date)) {
+                            if(travelsList.get(i).get("vehicle").asText().equals(vehicle)){
+                                if(travelsList.get(i).get("remainingPassengers").asInt() >= passengersNumber){
+                                    resultList.add(travelsList.get(i).toString());
+                                }
+                            }
+                        }
+                    }
+                }
             }
-
-
-
-//            ObjectMapper mapper = new ObjectMapper();
-//            File jsonFile = new File(USERS_FILE_PATH);
-//            ArrayNode usersList = (ArrayNode) mapper.readTree(jsonFile);
-//            for(int i = 0; i < usersList.size() ; i++){
-//                if(usersList.get(i).get("username").asText().equals(username)){
-//
-//                    if(usersList.get(i).get("password").asText().equals(password)){
-//                        result = (ObjectNode)usersList.get(i);
-//
-//                    }
-//                }
-//            }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
 
+        String result = String.join(",", resultList);
         //send data to client
-        byte[] outputByte = result.toString().getBytes(StandardCharsets.UTF_8);
+        byte[] outputByte = result.getBytes(StandardCharsets.UTF_8);
         try {
-            System.out.println("returnt data is : " + result.toString());
             dos.write(outputByte);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
     }
+    public static boolean compareDates(String date1, String date2) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+
+        LocalDateTime localDateTime1 = LocalDateTime.parse(date1, formatter);
+        LocalDateTime localDateTime2 = LocalDateTime.parse(date2, formatter);
+
+        return localDateTime1.toLocalDate().isEqual(localDateTime2.toLocalDate());
+    }
+
 
 
 }

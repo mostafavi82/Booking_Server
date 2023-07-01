@@ -1,6 +1,5 @@
 [
   {
-    "1" : {
       "companyName" : "Fly Emirates",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -14,7 +13,7 @@
       "travelClass" : "Economy Class",
       "id" : 1
     },
-    "2" : {
+    {
       "companyName" : "Ghadir",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -28,7 +27,7 @@
       "travelClass" : "Economy Class",
       "id" : 2
     },
-    "3" : {
+    {
       "companyName" : "Fly Emirates",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -42,7 +41,7 @@
       "travelClass" : "Economy Class",
       "id" : 3
     },
-    "4" : {
+    {
       "companyName" : "Raja",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -56,7 +55,7 @@
       "travelClass" : "Economy Class",
       "id" : 4
     },
-    "5" : {
+    {
       "companyName" : "Iberia",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -70,7 +69,7 @@
       "travelClass" : "Economy Class",
       "id" : 5
     },
-    "6" : {
+    {
       "companyName" : "Delta",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -84,7 +83,7 @@
       "travelClass" : "Economy Class",
       "id" : 6
     },
-    "7" : {
+    {
       "companyName" : "Fly Emirates",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -98,7 +97,7 @@
       "travelClass" : "Economy Class",
       "id" : 7
     },
-    "8" : {
+    {
       "companyName" : "Iberia",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -112,7 +111,7 @@
       "travelClass" : "Economy Class",
       "id" : 8
     },
-    "9" : {
+    {
       "companyName" : "Fly Emirates",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -126,7 +125,7 @@
       "travelClass" : "Economy Class",
       "id" : 9
     },
-    "10" : {
+    {
       "companyName" : "Fly Emirates",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -140,7 +139,7 @@
       "travelClass" : "Economy Class",
       "id" : 10
     },
-    "11" : {
+    {
       "companyName" : "Raja",
       "origin" : "Barcelona",
       "destination" : "London",
@@ -154,5 +153,5 @@
       "travelClass" : "Economy Class",
       "id" : 11
     }
-  }
+
 ]
