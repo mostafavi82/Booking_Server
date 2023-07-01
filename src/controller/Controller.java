@@ -451,9 +451,6 @@ public class Controller {
         return false;
     }
 
-
-
-
     public static boolean getTicketList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
         final String TravelS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\travels.json";
 
@@ -523,7 +520,6 @@ public class Controller {
 
         return localDateTime1.toLocalDate().isEqual(localDateTime2.toLocalDate());
     }
-
 
 
 }
