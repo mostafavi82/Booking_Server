@@ -1,20 +1,20 @@
 package src.controller;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.ArrayList;
-import java.util.List;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 
 import src.Classes.Ticket;
 import src.Classes.Transaction;
@@ -71,7 +71,7 @@ public class Controller {
     }
 
     public static ObjectNode addUserToFile(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -178,7 +178,7 @@ public class Controller {
 
 
     public static boolean checkPasswordAndUsername(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -224,7 +224,7 @@ public class Controller {
 
 
     public static boolean changeWalletBalanceAndCreateTransaction(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -282,7 +282,7 @@ public class Controller {
 
 
     public static boolean changeAccountInformation(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -337,7 +337,7 @@ public class Controller {
 
 
     public static boolean changePersonalInformation(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -388,7 +388,7 @@ public class Controller {
 
 
     public static boolean addFutureTravelToTicketsList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String USERS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\users.json";
+        final String USERS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\users.json";
 
         ObjectMapper resultMapper = new ObjectMapper();
         ObjectNode result = resultMapper.createObjectNode();
@@ -452,7 +452,7 @@ public class Controller {
     }
 
     public static boolean getTicketList(String requestData , ObjectMapper objectMapper , DataOutputStream dos) {
-        final String TravelS_FILE_PATH = "C:\\Users\\Hooshmand\\IdeaProjects\\Booking_Server\\src\\database\\travels.json";
+        final String TravelS_FILE_PATH = "C:\\Users\\Farhad\\StudioProjects\\Booking_Server\\src\\Database\\travels.json";
 
         List<String> resultList = new ArrayList<>();
 
@@ -491,6 +491,7 @@ public class Controller {
                             if(travelsList.get(i).get("vehicle").asText().equals(vehicle)){
                                 if(travelsList.get(i).get("remainingPassengers").asInt() >= passengersNumber){
                                     resultList.add(travelsList.get(i).toString());
+                                    System.out.println(travelsList.get(i).toString() + "\n");
                                 }
                             }
                         }
@@ -503,6 +504,7 @@ public class Controller {
         }
 
         String result = String.join(",", resultList);
+        System.out.println("result: \n" + result);
         //send data to client
         byte[] outputByte = result.getBytes(StandardCharsets.UTF_8);
         try {
